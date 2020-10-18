@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript">
+        window.onload = function () {
+            var xhttp = new XMLHttpRequest();
+            xhttp.addEventListener("load", function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    var divSalida = document.getElementById("tabla");
+                    var alumnos = this.responseXML.getElementsByTagName("alumno");
+                    //var nodonombre = this.responseXML.getElementsByTagName("nombre");
+
+                    var ul = document.createElement("ul");
+                    for (var alumno of alumnos) {
+                        console.log(alumno);
+                        var id_alumno = alumno.getElementsByTagName("idalumno")[0].textContent;
+                        var nombre = alumno.getElementsByTagName("nombre")[0].textContent;
+                        var apellidos = alumno.getElementsByTagName("apellidos")[0].textContent;
+                        var nota = alumno.getElementsByTagName("nota")[0].textContent;
+
+                        var li = document.createElement("li");
+                        var link = document.createElement("a");
+                        link.href = "#";
+                        link.innerText = nombre;
+                        link.setAttribute("data-apellidos", apellidos);
+                        link.dataset.nota = nota; // LO MISMO QUE CREAR CON SETATRIBUTE EL DATAKEY
+                        link.addEventListener("click", mostrarDatosaAlumno);
+                        ul.appendChild(li).appendChild(link);
+
+                    }
+
+                    divSalida.appendChild(ul);
+                }
+            });
+            xhttp.open("GET", "xml/alumnos.xml");
+            xhttp.send();
+        }
+        function mostrarDatosaAlumno() {
+            var apellidos = this.dataset.apellidos; //COGEMOS EL DATA-KEY APELLIDO
+            var nota = this.getAttribute("data-nota"); //COGEMOS EL DATA-KEY NOTA
+            document.getElementById("capadatos").innerHTML =
+                "<h1>" + this.innerText + " "
+                + apellidos + "</h1>";
+            document.getElementById("capadatos").innerHTML +=
+                "<h2 style='color:red'>Nota: " + nota + "</h2>";
+
+        }
+
+    </script>
+</head>
+
+<body>
+    <div id="tabla"></div>
+    <div id="capadatos"></div>
+</body>
+
+</html>

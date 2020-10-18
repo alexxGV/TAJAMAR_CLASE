@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Documento XML simple JQUERY</h1>
+    <button type="button" id="botonleer">
+        Cargar empleados
+    </button>
+    <hr />
+    <div id="resultado"></div>
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#botonleer').click(function () {
+                $.get("xml/empleados.xml", function (data) {
+                    console.log("Leyendo...");
+                    //BUSCAR LAS ETQUETAS APELLIDO
+                    var apellidos = $(data).find("APELLIDO");
+                    var html = "<ul>";
+                    apellidos.each(function (){
+                        var ape = $(this).text(); //textContent
+                        html+= "<li>" + ape + "</li>"
+                    });
+                    html += "</ul>";
+                    $("#resultado").html(html);
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

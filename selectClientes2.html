@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        h2 {
+            color: blue;
+        }
+    </style>
+</head>
+
+<body>
+    <form>
+        <label>Seleccion de clientes XML</label>
+        <select id="select"></select>
+    </form>
+    <div id="salida"></div>
+
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $.get('xml/ClientesXML.xml', function (data) {
+                var clientes = $(data).find("CLIENTE");
+                //BUSCO LOS NOMBRES 
+                //var nombres = $(data).find("NOMBRE");
+                //RECORRO CADA NOMBRE Y LO MUESTRO EN UN OPTION NUEVO
+                clientes.each(function () {
+                    //var name = $(this).text();
+                    var name = $(this).find("NOMBRE").text();
+                    var direccion = $(this).find("DIRECCION").text();
+                    var email = $(this).find("EMAIL").text();
+                    var codPostal = $(this).find("CODIGOPOSTAL").text();
+                    var web = $(this).find("PAGINAWEB").text();
+                    var img = $(this).find("IMAGENCLIENTE").text();
+                    
+                    var option = document.createElement('option');
+                    option.text = name;
+                    $('#select').append(option);
+                    $('#select').change(function () {
+                        $('#select option:selected').each(function () {
+                        $('#salida').html( '<h2>Nombre: ' + name + '</h2>'
+                                + '<h2>DIRECCION: ' + direccion + '</h2>'
+                                + '<h2>CODPOSTAL: ' + codPostal + '</h2>'
+                                + '<h2><a href="' + web + '">PAGINA WEB: </a></h2>'
+                                + '<img src="' + img + '"/>');
+
+
+
+                        });
+                    });
+                });
+            });
+
+        });
+    </script>
+</body>
+
+</html>
