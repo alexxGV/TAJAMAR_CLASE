@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>Documento JSON XMLHttpRequest</h1>
+    <button type="button" onclick="realizarPeticion()">
+        Leer clientes JavaScript
+    </button>
+    <div id="resultado"></div>
+
+    <script type="text/javascript">
+        function realizarPeticion() {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    //AQUI CAPTURAMOS LA RESPUESTA
+                    //CONVERTIMOS EL TEXTO PLANO A JSON
+                    var textoplano = this.responseText;
+                    //CONVERTIMOS EL TEXTO PLANO A FORMATO JSON
+                    var data = JSON.parse(textoplano);
+                    leerDatosJson(data);
+                }
+            }
+            xhr.open("GET", 'json/clientessimples.json', true); //true --> PETICION ASINCRONA
+            xhr.send();
+        }
+        function leerDatosJson(data) {
+            //LOS OBJETOS JSON VIENEN JAVASCRIPT SE MANEJAN IGUAL QUE JQUERY
+            for (var i = 0; i < data.clientes.length; i++) {
+                var h1 = document.createElement('h1');
+                //CAPTURAMOS CADA CLIENTE
+                var cliente = data.clientes[i];
+                h1.innerText = cliente.nombre;
+                document.getElementById('resultado').appendChild(h1);
+            }
+        }
+    </script>
+</body>
+
+</html>
