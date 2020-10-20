@@ -9,28 +9,32 @@
     <h1>Accesso Servicios Api Departamentos</h1>
     <form>
         <label>Numero:</label><br/>
-        <input type="number" id="cajanumero"/>
+        <input type="number" id="cajanumero"/><br/>
         
         <label>Nombre:</label><br/>
-        <input type="text" id="cajanombre"/>        
+        <input type="text" id="cajanombre"/><br/>     
 
         <label>Localidad:</label><br/>
-        <input type="text" id="cajalocalidad"/>
-        
+        <input type="text" id="cajalocalidad"/><br/>
+
+        <br/>
 
         <button type="button" id="botoninsertar">
             Insertar
         </button>
-
+        
         <button type="button" id="botonmodificar">
             Modificar
         </button>
-
+        
         <button type="button" id="botoneliminar">
             Eliminar
         </button>
     </form>
+    <hr/>
 
+    <h1 id="mensaje"></h1>
+    
     <table border="1" id="tabla">
         <thead>
             <tr>
@@ -47,6 +51,73 @@
         var urlapi = 'https://apicruddepartamentoscore.azurewebsites.net/';
         $(document).ready(function (){
             cargarDepartamentos();
+
+            $('#botoneliminar').click(function (){
+                var numero = $('#cajanumero').val();
+                var request = "/api/departamentos/" + numero;
+                $.ajax({
+                    'url' : urlapi + request,
+                    'type' : 'DELETE',
+                    'sucess' : function (data){
+                        $('#mensaje').text('Departamento eliminado: ' + numero)
+                        cargarDepartamentos();
+                    }
+                });
+            });
+
+            $('#botoninsertar').click(function (){
+                var numero = $('#cajanumero').val();
+                var nombre = $('#cajanombre').val();
+                var localidad = $('#cajalocalidad').val();
+                var request = '/api/Departamentos';
+
+                //NECECISTAMOS CREAR UN OBJETO JSON PARA PODER INSERTARLO
+                //OBJETO JS
+                var dept = new Object();
+                dept.numero = parseInt(numero);
+                dept.nombre = nombre;
+                dept.localidad = localidad;
+                
+                //TRANSFORMAMOS EL OBJESTO JS A JSON
+                var json = JSON.stringify(dept);
+                $.ajax({
+                    'url' : urlapi + request,
+                    'type' : 'POST',
+                    'data' : json, //data son los datos a enviar al servidor
+                    'contentType' : 'application/json', //tipo de dato que enviamos (json)
+                    'success' : function (){
+                        $('#mensaje').text('Departamento insertado');
+                        cargarDepartamentos();
+                    },
+                    'error' : function (XMLHttpRequest, textStatus, errorThrown){
+                        console.log(textStatus);
+                    }
+                });
+            });
+
+            $('#botonmodificar').click(function (){
+                var numero = $('#cajanumero').val();
+                var nombre = $('#cajanombre').val();
+                var localidad = $('#cajalocalidad').val();
+                var request = '/api/Departamentos/';
+
+                var dept = new Object();
+                dept.numero = parseInt(numero);
+                dept.nombre = nombre;
+                dept.localidad = localidad;
+
+                var json = JSON.stringify(dept);
+                console.log(urlapi+request);
+                $.ajax({
+                    'url' : urlapi + request,
+                    'type' : 'PUT',
+                    'data' : json,
+                    'contentType' : 'applicaction/json',
+                    'success' : function (){
+                        $('#mensaje').text('El id: ' + numero + ' a sido modificado correctamente');
+                    }
+                })
+            });
         });
 
         //SEPARAMOS LA LECTURA DEL DOCUMENT READY
