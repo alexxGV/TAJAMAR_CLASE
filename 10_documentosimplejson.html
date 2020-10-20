@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-
 <body>
     <h1>Documento simple Tareas Json</h1>
     <button type="button" id="botonget">
@@ -15,53 +13,11 @@
     <button type="button" id="botonajax">
         Leer con Ajax
     </button>
-    <hr />
+    <hr/>
     <div id="resultado"></div>
 
     <script src="js/jquery-3.5.1.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#botonget').click(function () {
-                $.getJSON("json/tareas.json", function (data) {
-                    //VAMOS A RECORRER UN OBJETO SIMPLE {}
-                    $.each(data, function (key, value) {
-                        //RECOREMOS DE OBJETOS SIMPLES
-                        //KEY --> CLAVE
-                        //VALUE --> ES EL VALOR
-                        var h1 = $('<h1>', {
-                            'text': 'Clave: '
-                                + key + ", Valor: " + value
-                        });
-                        h1.appendTo($('#resultado'));
-                    });
-                })
-            });
-
-            $('#botonajax').click(function () {
-                $.ajax({
-                    'url': 'json/tareas.json',
-                    'method': 'GET',
-                    success: function (data) {
-                        $.each(data, function (key, value) {
-                            var h1 = $('<h1>', {
-                                text: 'key: ' + key +
-                                    ', value: ' + value
-                            });
-                            h1.css('color', 'blue');
-                            $('#resultado').append(h1);
-
-                        });
-                    },
-                    'error': function () {
-                        $('#resultado').text('ERROR AL LEER');
-                    }
-                });
-            });
-        });
-
-
-
-    </script>
+    <script></script>
+    
 </body>
-
 </html>
