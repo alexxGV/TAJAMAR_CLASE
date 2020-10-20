@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Accesso Servicios Api Departamentos</h1>
+    <form>
+        <label>Numero:</label><br/>
+        <input type="number" id="cajanumero"/>
+        
+        <label>Nombre:</label><br/>
+        <input type="text" id="cajanombre"/>        
+
+        <label>Localidad:</label><br/>
+        <input type="text" id="cajalocalidad"/>
+        
+
+        <button type="button" id="botoninsertar">
+            Insertar
+        </button>
+
+        <button type="button" id="botonmodificar">
+            Modificar
+        </button>
+
+        <button type="button" id="botoneliminar">
+            Eliminar
+        </button>
+    </form>
+
+    <table border="1" id="tabla">
+        <thead>
+            <tr>
+                <th>NUMERO</th>
+                <th>NOMBRE</th>
+                <th>LOCALIDAD</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script>
+        var urlapi = 'https://apicruddepartamentoscore.azurewebsites.net/';
+        $(document).ready(function (){
+            cargarDepartamentos();
+        });
+
+        //SEPARAMOS LA LECTURA DEL DOCUMENT READY
+        function cargarDepartamentos(){
+            var request = '/api/departamentos'; //da igual las mayusculas es url y no diferencia
+            $.getJSON(urlapi + request, function (data){
+                var html = '';
+                $.each(data, function (index, dept){
+                    html += '<tr>';
+                    html += '<td>' + dept.numero + '</td>';
+                    html += '<td>' + dept.nombre + '</td>';
+                    html += '<td>' + dept.localidad + '</td>';
+                    html += '</tr>';
+                });
+                $('#tabla tbody').html(html);
+            });
+        }
+    </script>
+
+</body>
+</html>
