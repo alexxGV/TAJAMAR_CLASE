@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <h2 id="mensaje"></h2>
+    <form>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="basic-addon1">@</span>
+            </div>
+            <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">ID HOSPITAL</span>
+            </div>
+            <input id="inpHosp" type="number" class="form-control" placeholder="ID Hospital" aria-label="Hospital" aria-describedby="basic-addon1">
+        </div>
+        
+        <label>ID Hospital</label>
+        <input id="inpIdHosp" type="number"><br />
+
+        <label>Nombre</label>
+        <input id="inpNombre" type="text"><br />
+
+        <label>Direccion</label>
+        <input id="inpDireccion" type="text"><br />
+
+        <label>Telefono</label>
+        <input id="inpTelefono" type="text"><br />
+
+        <label>Camas</label>
+        <input id="inpCamas" type="number"><br />
+
+        <button type="button" id="insertar">Insertar</button>
+        <button type="button" id="modificar">Modificar</button>
+
+    </form>
+
+    <hr />
+
+    <table id="tablaHospitales" border='1' class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID Hospital</th>
+                <th>Nombre</th>
+                <th>Direccion</th>
+                <th>Telefono</th>
+                <th>Camas</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            cargarHospitales();
+            insertar();
+            modificar();
+        });
+
+        function insertar() {
+            var urlHosp = 'https://apicrudhospital.azurewebsites.net/';
+            var request = '/webresources/hospitales/post';
+            $('#insertar').click(function () {
+                var idHosp = parseInt($('#inpIdHosp').val());
+                var nombre = $('#inpNombre').val();
+                var direccion = $('#inpDireccion').val();
+                var telefono = $('#inpTelefono').val();
+                var camas = parseInt($('#inpCamas').val());
+
+                var objetojs = new Object();
+                objetojs.idhospital = idHosp;
+                objetojs.nombre = nombre;
+                objetojs.direccion = direccion;
+                objetojs.telefono = telefono;
+                objetojs.camas = camas;
+
+                var json = JSON.stringify(objetojs);
+                console.log(json);
+
+                $.ajax({
+                    url: urlHosp + request,
+                    type: 'POST',
+                    data: json,
+                    contentType: 'application/json',
+                    'success': function () {
+                        //$('#mensaje').css('color:red');
+                        $('#mensaje').text('HOSPITAL INTRODUCIDO CORRECTAMENTE')
+                        cargarHospitales();
+                    }
+                });
+            });
+        }
+
+        function modificar() {
+            var urlHosp = 'https://apicrudhospital.azurewebsites.net/';
+            var request = '/webresources/hospitales/put';
+            $('#modificar').click(function () {
+                var idHosp = parseInt($('#inpIdHosp').val());
+                var nombre = $('#inpNombre').val();
+                var direccion = $('#inpDireccion').val();
+                var telefono = $('#inpTelefono').val();
+                var camas = parseInt($('#inpCamas').val());
+
+                var objetojs = new Object();
+                objetojs.idhospital = idHosp;
+                objetojs.nombre = nombre;
+                objetojs.direccion = direccion;
+                objetojs.telefono = telefono;
+                objetojs.camas = camas;
+
+                var json = JSON.stringify(objetojs);
+                console.log(json);
+
+                $.ajax({
+                    url: urlHosp + request,
+                    type: 'PUT',
+                    data: json,
+                    contentType: 'application/json',
+                    'success': function () {
+                        //$('#mensaje').css('color:red');
+                        $('#mensaje').text('HOSPITAL MODIFICADO CORRECTAMENTE')
+                        cargarHospitales();
+                    }
+                });
+            });
+        }
+
+        function cargarHospitales() {
+            var urlHosp = 'https://apicrudhospital.azurewebsites.net/';
+            var request = 'webresources/hospitales';
+
+            $.ajax({
+                url: urlHosp + request,
+                type: 'GET',
+                success: function (data) {
+                    console.log(data);
+                    $.each(data, function (index, hospital) {
+                        console.log(hospital.idhospital);
+                        var tr = $('<tr>');
+                        var tdIdHosp = $('<td>', {
+                            text: hospital.idhospital
+                        });
+                        var tdNombre = $('<td>', {
+                            text: hospital.nombre
+                        });
+                        var tdDireccion = $('<td>', {
+                            text: hospital.direccion
+                        });
+                        var tdTelefono = $('<td>', {
+                            text: hospital.telefono
+                        });
+                        var tdCamas = $('<td>', {
+                            text: hospital.camas
+                        });
+                        var a = $('<a>', {
+                            'href': '#',
+                            'text': 'Eliminar'
+                        });
+                        var tdEliminar = $('<td>');
+                        tdEliminar.append(a);
+                        tr.append(tdIdHosp, tdNombre, tdDireccion, tdTelefono, tdCamas, tdEliminar);
+                        $('#tablaHospitales tbody').append(tr);
+
+                        $(a).click(function () {
+                            var id = hospital.idhospital;
+
+                            $.ajax({
+                                url: urlHosp + request + '/delete/' + id,
+                                type: 'DELETE',
+                                success: function () {
+                                    $('#mensaje').text('ELIMINADO EL ID: ' + id + ' A SIDO ELIMINADO CORRECTAMENTE');
+                                }
+                            });
+                        })
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
