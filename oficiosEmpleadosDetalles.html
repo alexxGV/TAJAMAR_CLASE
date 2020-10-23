@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <select id="oficios">
+    </select>
+
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/empleado.js"></script>
+    <script>
+        $(document).ready(function () {
+            var empleados = new Array;
+
+            var urlEmpleados = 'https://apipracticaempleados.azurewebsites.net/';
+            var request = 'api/empleados';
+            $.ajax({
+                url: urlEmpleados + request,
+                type: 'GET',
+                'success': function (data) {
+                    console.log('DATA: ' + data);
+                    $.each(data, function (index, empleado) {
+                        //console.log(empleado.apellido);
+                        empleados.push(new Empleado(empleado.idempleado, empleado.apellido, empleado.oficio, empleado.salario, empleado.departamento));
+                    });
+                }
+            });
+            console.log('ARRAY EMPLEADOS: ');
+            console.log(empleados);
+
+            var oficios = new Array;
+
+            var oficiosUnicos = [];
+            var oficiosObj = {};
+            for (var i = 0; i < empleados.length; i++) {
+                oficios.push(empleados[i].oficio);
+            }
+            console.log('TODOS LOS OFICIOS');
+            console.log(oficios);
+            oficios.forEach(ofi => {
+                if (!(ofi in oficios)) {
+                    oficiosObj[ofi] = true;
+                    oficiosUnicos.push(ofi);
+                }
+            });
+
+            for (var i = 0; i < oficiosUnicos.length; i++) {
+                var option = $('<option>');
+                option.text(oficiosUnicos[i].val());
+                $('#oficios').append(option);
+            }
+
+        });
+    </script>
+</body>
+
+</html>

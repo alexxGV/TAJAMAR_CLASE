@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Ejemplo de Herencia</h1>
+    <button type="button" id="botonherencia">
+        Probar herencia
+    </button>
+    <button type="button" id="botonextends">
+        Probar extends
+    </button>
+    <div id="resultado"></div>
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <script src="js/herenciaextends.js"></script>
+    <script>
+        $(document).ready(function (){
+            $('#botonextends').click(function (){
+                //UTILIZAMOS ARRAY NATIVO PERO CON NUEVAS FUNCIONALIDADES
+                var array = new Array();
+                array.push(44);
+                array.push(77);
+                array.push(88);
+                var html = '<h2 style="color:blue">Elementos ' + array.contarElementos() + '</h2>';
+                html += '<h2 style="color:red">Elementos ' + array.sumarElementos() + '</h2>';
+                $('#resultado').html(html);
+            });
+
+            $('#botonherencia').click(function (){
+                var array = new MiArray();
+                array.push(88);
+                array.push(14);
+                array.push(22);
+                array.push(5);
+                var html = '<h3>Descripcion: ' + array.descripcion + '</h3>';
+                html += '<h3>Longitud: ' + array.longitud + '</h3>';
+                html += '<h3 style="color:blue">Elementos: ' + array.contarElementos() + '</h3>';
+                html += '<h3 style="color:red">Suma: ' + array.sumarElementos() + '</h3>';
+                $('#resultado').html(html);
+            });
+        });
+    </script>
+</body>
+</html>
